@@ -24,4 +24,4 @@ pipeline {
             echo 'FAILED - check the logs above.'
         }
     }
-}}
+}
