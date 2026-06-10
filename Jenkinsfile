@@ -8,14 +8,20 @@ pipeline {
                 sh './mvnw clean verify'
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t logindemo .'
+            }
+        }
     }
 
     post {
         success {
-            echo 'SUCCESS - build, tests, and 80% coverage all passed!'
+            echo 'SUCCESS - build, tests, coverage, and Docker image all done!'
         }
         failure {
             echo 'FAILED - check the logs above.'
         }
     }
-}
+}}
