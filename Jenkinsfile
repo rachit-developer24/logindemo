@@ -14,6 +14,18 @@ pipeline {
                 sh 'docker build -t logindemo .'
             }
         }
+
+        stage('Push to Registry') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag logindemo $DOCKER_USER/logindemo:latest
+                        docker push $DOCKER_USER/logindemo:latest
+                    '''
+                }
+            }
+        }
     }
 
     post {
