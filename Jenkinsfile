@@ -17,11 +17,13 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency Scan') {
-            steps {
-                sh './mvnw org.owasp:dependency-check-maven:check'
-            }
-        }
+               stage('OWASP Dependency Scan') {
+                   steps {
+                       withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
+                           sh './mvnw org.owasp:dependency-check-maven:check -DnvdApiKey=$NVD_API_KEY'
+                       }
+                   }
+               }
 
         stage('Snyk Security Scan') {
             steps {
