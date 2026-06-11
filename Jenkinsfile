@@ -9,6 +9,14 @@ pipeline {
             }
         }
 
+        stage('SonarQube Scan') {
+            steps {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    sh './mvnw sonar:sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=logindemo'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t logindemo .'
@@ -30,7 +38,7 @@ pipeline {
 
     post {
         success {
-            echo 'SUCCESS - build, tests, coverage, and Docker image all done!'
+            echo 'SUCCESS - build, tests, coverage, scan, image, and push all done!'
         }
         failure {
             echo 'FAILED - check the logs above.'
