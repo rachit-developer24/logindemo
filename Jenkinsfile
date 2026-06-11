@@ -27,6 +27,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
                     sh 'snyk test || true'
+                    sh 'snyk monitor || true'
                 }
             }
         }
