@@ -17,6 +17,12 @@ pipeline {
             }
         }
 
+        stage('OWASP Dependency Scan') {
+            steps {
+                sh './mvnw org.owasp:dependency-check-maven:check'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t logindemo .'
@@ -38,7 +44,7 @@ pipeline {
 
     post {
         success {
-            echo 'SUCCESS - build, tests, coverage, scan, image, and push all done!'
+            echo 'SUCCESS - build, tests, coverage, scans, image, and push all done!'
         }
         failure {
             echo 'FAILED - check the logs above.'
