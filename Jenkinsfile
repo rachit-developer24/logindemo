@@ -23,6 +23,14 @@ pipeline {
             }
         }
 
+        stage('Snyk Security Scan') {
+            steps {
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    sh 'snyk test || true'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t logindemo .'
